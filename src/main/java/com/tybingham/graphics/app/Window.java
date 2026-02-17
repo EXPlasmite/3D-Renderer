@@ -36,7 +36,7 @@ public class Window {
         if (handle == 0) throw new RuntimeException("Failed to create GLFW window");
 
         GLFW.glfwMakeContextCurrent(handle);
-        GLFW.glfwSwapInterval(1); // vsync
+        GLFW.glfwSwapInterval(1); // Vsync
         GLFW.glfwShowWindow(handle);
 
         GL.createCapabilities();
@@ -62,14 +62,25 @@ public class Window {
         GLFW.glfwPollEvents();
     }
 
-    public void render() {
-        glClearColor(0.08f, 0.09f, 0.12f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    public void clear() {
+    glClearColor(0.08f, 0.09f, 0.12f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    public void swapBuffers() {
         GLFW.glfwSwapBuffers(handle);
     }
 
     public boolean shouldClose() {
         return GLFW.glfwWindowShouldClose(handle);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void destroy() {

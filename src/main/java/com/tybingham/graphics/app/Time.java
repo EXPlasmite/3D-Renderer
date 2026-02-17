@@ -17,6 +17,14 @@ public final class Time {
         double now = GLFW.glfwGetTime();
         dt = (float)(now - last);
         last = now;
+
+        // Optional safety clamp
+        if (dt > 0.1f) dt = 0.1f;
+        if (dt < 0f) dt = 0f;
+    }
+
+    public static float dt() {
+        return dt;
     }
 
     public static float deltaTime() {

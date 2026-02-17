@@ -1,5 +1,7 @@
 package com.tybingham.graphics.scene;
 
-public class Scene {
-
+public interface Scene {
+    void init();
+    void update(float dt);
+    void destroy();
 }
