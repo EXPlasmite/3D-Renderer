@@ -15,7 +15,7 @@ public class Camera {
     }
 
     public Mat4 getViewMatrix() {
-        // look towards origin for now
+        // Look towards origin for now
         return Mat4.lookAt(position, new Vec3(0,0,0), new Vec3(0,1,0));
     }
 }

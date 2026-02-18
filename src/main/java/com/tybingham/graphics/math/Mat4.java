@@ -65,4 +65,44 @@ public class Mat4 {
         }
         return r;
     }
+
+        public static Mat4 translation(Vec3 t) {
+        Mat4 r = identity();
+        r.m[12] = t.x;
+        r.m[13] = t.y;
+        r.m[14] = t.z;
+        return r;
+    }
+
+    public static Mat4 scale(Vec3 s) {
+        Mat4 r = identity();
+        r.m[0] = s.x;
+        r.m[5] = s.y;
+        r.m[10] = s.z;
+        return r;
+    }
+
+    public static Mat4 rotateX(float radians) {
+        Mat4 r = identity();
+        float c = (float)Math.cos(radians);
+        float s = (float)Math.sin(radians);
+
+        r.m[5] = c;
+        r.m[6] = -s;
+        r.m[9] = s;
+        r.m[10] = c;
+        return r;
+    }
+
+    public static Mat4 rotateZ(float radians) {
+        Mat4 r = identity();
+        float c = (float)Math.cos(radians);
+        float s = (float)Math.sin(radians);
+
+        r.m[0] = c;
+        r.m[1] = s;
+        r.m[4] = -s;
+        r.m[5] = c;
+        return r;
+    }
 }

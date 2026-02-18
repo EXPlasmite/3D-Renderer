@@ -6,6 +6,11 @@ public class Vec3 {
     public Vec3() { this(0,0,0); }
     public Vec3(float x, float y, float z) { this.x=x; this.y=y; this.z=z; }
 
+    public Vec3 set(float x, float y, float z) {
+        this.x = x; this.y = y; this.z = z;
+        return this;
+    }
+
     public Vec3 sub(Vec3 o) { return new Vec3(x - o.x, y - o.y, z - o.z); }
 
     public Vec3 normalize() {
