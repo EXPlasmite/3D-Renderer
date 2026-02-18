@@ -18,12 +18,12 @@ public final class MeshFactory {
         };
 
         int[] indices = {
-                0,1,2, 2,3,0,   // back
-                4,5,6, 6,7,4,   // front
-                4,7,3, 3,0,4,   // left
-                1,5,6, 6,2,1,   // right
-                4,5,1, 1,0,4,   // bottom
-                3,2,6, 6,7,3    // top
+                0,1,2, 2,3,0,   // Back
+                4,5,6, 6,7,4,   // Front
+                4,7,3, 3,0,4,   // Left
+                1,5,6, 6,2,1,   // Right
+                4,5,1, 1,0,4,   // Bottom
+                3,2,6, 6,7,3    // Top
         };
 
         return new Mesh(vertices, indices);

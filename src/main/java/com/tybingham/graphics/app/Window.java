@@ -12,6 +12,8 @@ public class Window {
 
     private long handle;
 
+    private Input input;
+
     public Window(String title, int width, int height) {
         this.title = title;
         this.width = width;
@@ -38,6 +40,8 @@ public class Window {
         GLFW.glfwMakeContextCurrent(handle);
         GLFW.glfwSwapInterval(1); // Vsync
         GLFW.glfwShowWindow(handle);
+
+        input = new Input(handle);
 
         GL.createCapabilities();
 
@@ -73,6 +77,10 @@ public class Window {
 
     public boolean shouldClose() {
         return GLFW.glfwWindowShouldClose(handle);
+    }
+
+    public Input getInput() {
+        return input;
     }
 
     public int getWidth() {

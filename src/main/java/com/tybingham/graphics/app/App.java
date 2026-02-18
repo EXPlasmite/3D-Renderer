@@ -28,9 +28,14 @@ public class App {
 
         while (!window.shouldClose()) {
             Time.update();
+            float dt = Time.deltaTime();
 
             window.update();
-            scene.update(Time.deltaTime());
+
+            // Update camera
+            camera.update(dt, window.getInput());
+
+            scene.update(dt);
 
             window.clear();
             renderer.render(scene, camera, window);
