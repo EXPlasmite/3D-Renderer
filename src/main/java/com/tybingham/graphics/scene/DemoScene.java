@@ -12,7 +12,7 @@ public class DemoScene implements Scene {
 
     @Override
     public void init() {
-        cubeMesh = MeshFactory.makeColoredCube();
+        cubeMesh = MeshFactory.makeColouredCube();
 
         Object3D a = new Object3D(cubeMesh);
         a.transform.position.set(-2f, 0f, 0f);

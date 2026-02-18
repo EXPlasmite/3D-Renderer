@@ -2,12 +2,23 @@
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aColor;
+layout (location = 2) in vec3 aNormal;
 
 uniform mat4 uMVP;
+uniform mat4 uModel;
 
 out vec3 vColor;
+out vec3 vWorldPos;
+out vec3 vNormal;
 
 void main() {
     vColor = aColor;
+
+    vec4 worldPos = uModel * vec4(aPos, 1.0);
+    vWorldPos = worldPos.xyz;
+
+    // OK for uniform scale; later we can do proper normal matrix
+    vNormal = mat3(uModel) * aNormal;
+
     gl_Position = uMVP * vec4(aPos, 1.0);
 }
