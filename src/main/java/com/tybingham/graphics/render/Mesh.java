@@ -24,7 +24,8 @@ public class Mesh {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        int stride = 9 * Float.BYTES;
+        // Pos(3) + Colour(3) + Normal(3) + UV(2) = 11 Floats
+        int stride = 11 * Float.BYTES;
 
         // Position (location = 0)
         glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
@@ -37,6 +38,10 @@ public class Mesh {
         // Normal (location = 2)
         glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, 6L * Float.BYTES);
         glEnableVertexAttribArray(2);
+
+        // UV (location = 3)
+        glVertexAttribPointer(3, 2, GL_FLOAT, false, stride, 9L * Float.BYTES);
+        glEnableVertexAttribArray(3);
 
         glBindVertexArray(0);
     }

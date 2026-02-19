@@ -6,6 +6,8 @@ public class Object3D {
     public final Transform transform = new Transform();
     public Mesh mesh;
 
+    public boolean useTexture = false;
+
     // Per-object colour uniform
     public float r = 1f, g = 1f, b = 1f;
 

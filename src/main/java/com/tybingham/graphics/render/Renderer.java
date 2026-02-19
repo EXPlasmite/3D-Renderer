@@ -10,12 +10,17 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Renderer {
     private ShaderProgram shader;
 
     // Uniform locations
+    private int uUseTextureLoc;
+    private int uTintLoc;
+    private int uTex0Loc;
     private int uMvpLoc;
     private int uModelLoc;
     private int uLightDirLoc;
@@ -53,12 +58,15 @@ public class Renderer {
         String vert = Utils.readResource("shaders/basic.vert");
         String frag = Utils.readResource("shaders/basic.frag");
         shader = new ShaderProgram(vert, frag);
-
-        uMvpLoc       = shader.getUniformLocation("uMVP");
-        uModelLoc     = shader.getUniformLocation("uModel");
-        uLightDirLoc  = shader.getUniformLocation("uLightDir");
+        
+        uUseTextureLoc = shader.getUniformLocation("uUseTexture");
+        uTintLoc       = shader.getUniformLocation("uTint");
+        uTex0Loc       = shader.getUniformLocation("uTex0");
+        uMvpLoc        = shader.getUniformLocation("uMVP");
+        uModelLoc      = shader.getUniformLocation("uModel");
+        uLightDirLoc   = shader.getUniformLocation("uLightDir");
         uLightColorLoc = shader.getUniformLocation("uLightColor");
-        uViewPosLoc   = shader.getUniformLocation("uViewPos");
+        uViewPosLoc    = shader.getUniformLocation("uViewPos");
 
         uLightModeLoc      = shader.getUniformLocation("uLightMode");
         uPointLightPosLoc  = shader.getUniformLocation("uPointLightPos");
@@ -74,38 +82,45 @@ public class Renderer {
         Mat4 proj = Mat4.perspective((float) Math.toRadians(60f), aspect, 0.1f, 100f);
         Mat4 view = camera.getViewMatrix();
 
-        // Simple sunlight direction + white light
+        // Lighting setup
         Vec3 sunDir = new Vec3(-0.2f, -1.0f, -0.3f);
 
         float t = (float) org.lwjgl.glfw.GLFW.glfwGetTime();
         Vec3 pointPos = new Vec3((float)Math.sin(t) * 3.0f, 2.0f, 0.0f);
 
-        Vec3 lightColor = new Vec3(1f,1f,1f);
+        Vec3 lightColor = new Vec3(1f, 1f, 1f);
         if (lightMode == 2) {
             float h = (t * 0.1f) % 1.0f;
             lightColor = hsvToRgb(h, 1.0f, 1.0f);
         }
 
+        // If lights are off, intensity = 0
+        float effectiveIntensity = (lightMode == -1) ? 0.0f : lightIntensity;
+
         shader.bind();
 
-        float effectiveIntensity = (lightMode == -1) ? 0.0f : lightIntensity;
-        glUniform1f(uLightIntensityLoc, effectiveIntensity);
-        glUniform1i(uLightModeLoc, lightMode); // shader must handle -1
-
-        // Set per-frame uniforms (once)
+        // Per-frame uniforms
+        glUniform1i(uTex0Loc, 0); // Sampler uses texture unit 0
         glUniform1i(uLightModeLoc, lightMode);
         glUniform3f(uLightDirLoc, sunDir.x, sunDir.y, sunDir.z);
         glUniform3f(uPointLightPosLoc, pointPos.x, pointPos.y, pointPos.z);
-
         glUniform3f(uLightColorLoc, lightColor.x, lightColor.y, lightColor.z);
-        glUniform1f(uLightIntensityLoc, lightIntensity);
+        glUniform1f(uLightIntensityLoc, effectiveIntensity);
 
         Vec3 camPos = camera.getPosition();
         glUniform3f(uViewPosLoc, camPos.x, camPos.y, camPos.z);
 
-        // Draw all objects
+        // Draw objects
         for (var obj : demo.getObjects()) {
             if (obj.mesh == null) continue;
+
+            // Per-object toggles
+            glUniform1i(uUseTextureLoc, obj.useTexture ? 1 : 0);
+            glUniform3f(uTintLoc, obj.r, obj.g, obj.b);
+
+            // Bind texture per-object (or 0 to unbind)
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, obj.useTexture ? obj.textureId : 0);
 
             Mat4 model = obj.transform.modelMatrix();
             Mat4 mvp = Mat4.mul(proj, Mat4.mul(view, model));

@@ -2,6 +2,7 @@ package com.tybingham.graphics.scene;
 
 import com.tybingham.graphics.render.Mesh;
 import com.tybingham.graphics.render.MeshFactory;
+import com.tybingham.graphics.render.Texture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,32 +10,49 @@ import java.util.List;
 public class DemoScene implements Scene {
     private final List<Object3D> objects = new ArrayList<>();
     private Mesh cubeMesh;
+    private Texture brick;
 
     @Override
     public void init() {
-        cubeMesh = MeshFactory.makeColouredCube();
+        cubeMesh = MeshFactory.makeTexturedColoredCube();
+        brick = new Texture("textures/brick.jpg");
 
-        Object3D a = new Object3D(cubeMesh);
-        a.transform.position.set(-2f, 0f, 0f);
-        objects.add(a);
+        // 1) Textured centre cube
+        Object3D centre = new Object3D(cubeMesh);
+        centre.useTexture = true;
+        centre.textureId = brick.getId();
+        centre.transform.position.set(0f, 0f, 0f);
+        objects.add(centre);
 
-        Object3D b = new Object3D(cubeMesh);
-        b.transform.position.set(2f, 0f, 0f);
-        b.transform.scale.set(0.5f, 0.5f, 0.5f);
-        objects.add(b);
+        // 2) Coloured left cube
+        Object3D left = new Object3D(cubeMesh);
+        left.useTexture = false;
+        left.r = 1f; left.g = 0.2f; left.b = 0.2f;
+        left.transform.position.set(-2f, 0f, 0f);
+        objects.add(left);
 
-        Object3D c = new Object3D(cubeMesh);
-        c.transform.position.set(0f, 1.2f, 0f);
-        c.transform.scale.set(0.75f, 0.75f, 0.75f);
-        objects.add(c);
+        // 3) Coloured right cube
+        Object3D right = new Object3D(cubeMesh);
+        right.useTexture = false;
+        right.r = 0.2f; right.g = 1f; right.b = 0.2f;
+        right.transform.position.set(2f, 0f, 0f);
+        right.transform.scale.set(0.75f, 0.75f, 0.75f);
+        objects.add(right);
 
-        Object3D d = new Object3D(cubeMesh);
-        d.transform.position.set(0f, -1.2f, 0f);
-        objects.add(d);
+        // 4) Textured top cube
+        Object3D top = new Object3D(cubeMesh);
+        top.useTexture = true;
+        top.textureId = brick.getId();
+        top.transform.position.set(0f, 1.5f, 0f);
+        top.transform.scale.set(0.6f, 0.6f, 0.6f);
+        objects.add(top);
 
-        Object3D e = new Object3D(cubeMesh);
-        e.transform.position.set(0f, 0f, -2f);
-        objects.add(e);
+        // 5) Textured bottom cube
+        Object3D bottom = new Object3D(cubeMesh);
+        bottom.useTexture = true;
+        bottom.textureId = brick.getId();
+        bottom.transform.position.set(0f, -1.5f, 0f);
+        objects.add(bottom);
     }
 
     @Override
@@ -44,12 +62,11 @@ public class DemoScene implements Scene {
         }
     }
 
-    public List<Object3D> getObjects() {
-        return objects;
-    }
+    public List<Object3D> getObjects() { return objects; }
 
     @Override
     public void destroy() {
+        if (brick != null) brick.destroy();
         if (cubeMesh != null) cubeMesh.destroy();
     }
 }

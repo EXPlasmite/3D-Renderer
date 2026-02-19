@@ -18,7 +18,7 @@ public final class Time {
         dt = (float)(now - last);
         last = now;
 
-        // Optional safety clamp
+        // Safety clamp
         if (dt > 0.1f) dt = 0.1f;
         if (dt < 0f) dt = 0f;
     }

@@ -46,7 +46,7 @@ public class App {
 
 
             float scroll = input.consumeScrollY();
-            if (scroll != 0 && renderer.getLightMode() >= 1) { // 1=point, 2=rainbow
+            if (scroll != 0 && renderer.getLightMode() >= 1) { // 1 = Point, 2 = Rainbow
                 renderer.addIntensity(scroll * 0.1f);
             }
 
