@@ -17,8 +17,8 @@ void main() {
     vec4 worldPos = uModel * vec4(aPos, 1.0);
     vWorldPos = worldPos.xyz;
 
-    // OK for uniform scale; later we can do proper normal matrix
-    vNormal = mat3(uModel) * aNormal;
+    mat3 normalMat = transpose(inverse(mat3(uModel)));
+    vNormal = normalMat * aNormal;
 
     gl_Position = uMVP * vec4(aPos, 1.0);
 }

@@ -6,17 +6,31 @@ in vec3 vNormal;
 
 out vec4 FragColor;
 
-uniform vec3 uLightDir;   // direction TO light? we'll treat as "from light"
+uniform int  uLightMode;        // 0 = sun, 1 = point, 2 = rainbow point
+uniform vec3 uLightDir;
 uniform vec3 uLightColor;
+uniform vec3 uPointLightPos;
+uniform float uLightIntensity;
 uniform vec3 uViewPos;
 
 void main() {
     vec3 N = normalize(vNormal);
-    vec3 L = normalize(-uLightDir); // light direction points "down", so invert
+
+    // Choose light direction L (direction from surface TO light)
+    vec3 L;
+
+    if (uLightMode == 0) {
+        // Directional sunlight: uLightDir is direction the light points (like "downwards")
+        L = normalize(-uLightDir);
+    } else {
+        // Point light: vector from surface to light position
+        L = normalize(uPointLightPos - vWorldPos);
+    }
+
     vec3 V = normalize(uViewPos - vWorldPos);
 
     // Ambient
-    vec3 ambient = 0.15 * uLightColor;
+    vec3 ambient = 0.12 * uLightColor;
 
     // Diffuse
     float diff = max(dot(N, L), 0.0);
@@ -27,6 +41,18 @@ void main() {
     float spec = pow(max(dot(N, H), 0.0), 32.0);
     vec3 specular = 0.35 * spec * uLightColor;
 
-    vec3 lit = (ambient + diffuse + specular) * vColor;
+    // Point light attenuation (only for point modes)
+    float attenuation = 1.0;
+    if (uLightMode == -1) {
+        FragColor = vec4(vColor, 1.0);
+        return;
+    }
+    
+    if (uLightMode != 0) {
+        float d = length(uPointLightPos - vWorldPos);
+        attenuation = 1.0 / (1.0 + 0.09*d + 0.032*d*d); // classic quadratic falloff
+    }
+
+    vec3 lit = (ambient + attenuation * (diffuse + specular) * uLightIntensity) * vColor;
     FragColor = vec4(lit, 1.0);
 }

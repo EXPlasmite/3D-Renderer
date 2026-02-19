@@ -9,12 +9,15 @@ public class Input {
     private float deltaX, deltaY;
     private boolean firstMouse = true;
 
-    private boolean rWasDown = false;
+    // Key edge detection
+    private final boolean[] wasDown = new boolean[GLFW.GLFW_KEY_LAST + 1];
+
+    // Scroll wheel
+    private float scrollY = 0f;
 
     public Input(long windowHandle) {
         this.window = windowHandle;
 
-        // Hide + lock cursor for FPS-style camera
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 
         GLFW.glfwSetCursorPosCallback(window, (w, xpos, ypos) -> {
@@ -23,14 +26,16 @@ public class Input {
                 lastMouseY = ypos;
                 firstMouse = false;
             }
-
             deltaX += (float)(xpos - lastMouseX);
-            deltaY += (float)(lastMouseY - ypos); // Inverted so moving mouse up looks up
+            deltaY += (float)(lastMouseY - ypos);
 
             lastMouseX = xpos;
             lastMouseY = ypos;
         });
 
+        GLFW.glfwSetScrollCallback(window, (w, xoff, yoff) -> {
+            scrollY += (float) yoff;
+        });
     }
 
     public boolean keyDown(int key) {
@@ -38,35 +43,26 @@ public class Input {
     }
 
     public boolean keyPressedOnce(int key) {
-        return pressedOnceInternal(key);
+        boolean down = keyDown(key);
+        boolean pressed = down && !wasDown[key];
+        wasDown[key] = down;
+        return pressed;
     }
 
     public float consumeMouseDX() {
-        float v = deltaX;
-        deltaX = 0;
-        return v;
+        float v = deltaX; deltaX = 0; return v;
     }
 
     public float consumeMouseDY() {
-        float v = deltaY;
-        deltaY = 0;
-        return v;
+        float v = deltaY; deltaY = 0; return v;
+    }
+
+    public float consumeScrollY() {
+        float v = scrollY; scrollY = 0; return v;
     }
 
     public void resetMouse() {
         firstMouse = true;
         deltaX = deltaY = 0;
-    }
-
-    private boolean pressedOnceInternal(int key) {
-        boolean down = keyDown(key);
-
-        if (key == GLFW.GLFW_KEY_R) {
-            boolean pressed = down && !rWasDown;
-            rWasDown = down;
-            return pressed;
-        }
-
-        return false;
     }
 }

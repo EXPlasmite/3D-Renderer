@@ -1,5 +1,7 @@
 package com.tybingham.graphics.app;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.tybingham.graphics.render.Camera;
 import com.tybingham.graphics.render.Renderer;
 import com.tybingham.graphics.scene.DemoScene;
@@ -32,10 +34,21 @@ public class App {
 
             window.update();
 
-            // Update camera
-            camera.update(dt, window.getInput());
+            Input input = window.getInput();
 
+            camera.update(dt, input);
             scene.update(dt);
+
+            // Light mode toggles
+            if (input.keyPressedOnce(GLFW.GLFW_KEY_1)) renderer.toggleLightMode(0); // Sun 
+            if (input.keyPressedOnce(GLFW.GLFW_KEY_2)) renderer.toggleLightMode(1); // Point
+            if (input.keyPressedOnce(GLFW.GLFW_KEY_3)) renderer.toggleLightMode(2); // Rainbow Point
+
+
+            float scroll = input.consumeScrollY();
+            if (scroll != 0 && renderer.getLightMode() >= 1) { // 1=point, 2=rainbow
+                renderer.addIntensity(scroll * 0.1f);
+            }
 
             window.clear();
             renderer.render(scene, camera, window);
