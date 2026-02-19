@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.tybingham.graphics.render.Camera;
 import com.tybingham.graphics.render.Renderer;
+import com.tybingham.graphics.render.UiRenderer;
 import com.tybingham.graphics.scene.DemoScene;
 import com.tybingham.graphics.scene.Scene;
 
@@ -27,6 +28,9 @@ public class App {
         scene.init();
 
         Time.init();
+
+        UiRenderer ui = new UiRenderer();
+        ui.init();
 
         while (!window.shouldClose()) {
             Time.update();
@@ -52,11 +56,13 @@ public class App {
 
             window.clear();
             renderer.render(scene, camera, window);
+            ui.render(window, renderer);
             window.swapBuffers();
         }
 
         scene.destroy();
         renderer.destroy();
         window.destroy();
+        ui.destroy();
     }
 }

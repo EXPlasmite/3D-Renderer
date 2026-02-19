@@ -29,6 +29,8 @@ public class Renderer {
     private int uLightModeLoc;
     private int uPointLightPosLoc;
     private int uLightIntensityLoc;
+
+    // Lighting state
     private int lightMode = -1; // -1 = OFF, 0 = Sun, 1 = Point, 2 = Rainbow
     public void toggleLightMode(int mode) {
         lightMode = (lightMode == mode) ? -1 : mode;
@@ -142,8 +144,11 @@ public class Renderer {
         shader.unbind();
     }
 
-    public void setLightMode(int mode) { this.lightMode = mode; }
     public int getLightMode() { return lightMode; }
+
+    public float getLightIntensity() {
+        return lightIntensity;
+    }
 
     public void addIntensity(float delta) {
         lightIntensity = Math.max(0.1f, Math.min(5.0f, lightIntensity + delta));
