@@ -155,7 +155,8 @@ public class UiRenderer {
         lines.add("  [1] Sunlight (Directional): " + sunState);
         lines.add("  [2] Point Light (Moving): " + pointState);
         lines.add("  [3] Rainbow Point Light: " + rainbowState);
-        lines.add("  Mouse Wheel: Intensity (Point/Rainbow). Current: " + String.format("%.2f", intensity));
+        lines.add("  Mouse Wheel: Intensity (Point / Rainbow)");
+        lines.add("  Current Intensity: " + String.format("%.2f", intensity));
         lines.add("");
         lines.add("Camera:");
         lines.add("  W/A/S/D: Move | Mouse: Look");

@@ -1,5 +1,6 @@
 package com.tybingham.graphics.scene;
 
+import com.tybingham.graphics.math.Vec3;
 import com.tybingham.graphics.render.Mesh;
 import com.tybingham.graphics.render.MeshFactory;
 import com.tybingham.graphics.render.Texture;
@@ -12,27 +13,39 @@ public class DemoScene implements Scene {
     private Mesh cubeMesh;
     private Texture brick;
 
+    // Keep references for animation
+    private Object3D centre;
+    private Object3D left;
+    private Object3D right;
+
+    // Base values so we don’t drift over time
+    private final Vec3 leftBasePos = new Vec3();
+    private final Vec3 rightBasePos = new Vec3();
+    private final Vec3 centreBaseScale = new Vec3();
+
+    private float time = 0f;
+
     @Override
     public void init() {
         cubeMesh = MeshFactory.makeTexturedColoredCube();
         brick = new Texture("textures/brick.jpg");
 
         // 1) Textured centre cube
-        Object3D centre = new Object3D(cubeMesh);
+        centre = new Object3D(cubeMesh);
         centre.useTexture = true;
         centre.textureId = brick.getId();
         centre.transform.position.set(0f, 0f, 0f);
         objects.add(centre);
 
         // 2) Coloured left cube
-        Object3D left = new Object3D(cubeMesh);
+        left = new Object3D(cubeMesh);
         left.useTexture = false;
         left.r = 1f; left.g = 0.2f; left.b = 0.2f;
         left.transform.position.set(-2f, 0f, 0f);
         objects.add(left);
 
         // 3) Coloured right cube
-        Object3D right = new Object3D(cubeMesh);
+        right = new Object3D(cubeMesh);
         right.useTexture = false;
         right.r = 0.2f; right.g = 1f; right.b = 0.2f;
         right.transform.position.set(2f, 0f, 0f);
@@ -53,13 +66,41 @@ public class DemoScene implements Scene {
         bottom.textureId = brick.getId();
         bottom.transform.position.set(0f, -1.5f, 0f);
         objects.add(bottom);
+
+        // Store base values for animation
+        leftBasePos.set(left.transform.position.x, left.transform.position.y, left.transform.position.z);
+        rightBasePos.set(right.transform.position.x, right.transform.position.y, right.transform.position.z);
+        centreBaseScale.set(centre.transform.scale.x, centre.transform.scale.y, centre.transform.scale.z);
     }
 
     @Override
     public void update(float dt) {
+        time += dt;
+
+        // Rotate everything EXCEPT centre (centre pulses instead)
         for (int i = 0; i < objects.size(); i++) {
-            objects.get(i).transform.rotation.y += dt * (0.6f + i * 0.2f);
+            Object3D obj = objects.get(i);
+            if (obj == centre) continue;
+            obj.transform.rotation.y += dt * (0.6f + i * 0.2f);
         }
+
+        // Left + right bob up/down
+        float bobSpeed = 1.5f;
+        float bobAmp = 0.6f;
+
+        left.transform.position.y = leftBasePos.y + (float)Math.sin(time * bobSpeed) * bobAmp;
+        right.transform.position.y = rightBasePos.y + (float)Math.sin(time * bobSpeed + Math.PI) * bobAmp;
+
+        // Centre pulses scale
+        float pulseSpeed = 2.0f;
+        float pulseAmp = 0.25f;
+        float s = 1.0f + (float)Math.sin(time * pulseSpeed) * pulseAmp;
+
+        centre.transform.scale.set(
+                centreBaseScale.x * s,
+                centreBaseScale.y * s,
+                centreBaseScale.z * s
+        );
     }
 
     public List<Object3D> getObjects() { return objects; }

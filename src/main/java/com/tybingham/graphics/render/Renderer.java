@@ -96,9 +96,16 @@ public class Renderer {
             lightColor = hsvToRgb(h, 1.0f, 1.0f);
         }
 
-        // If lights are off, intensity = 0
-        float effectiveIntensity = (lightMode == -1) ? 0.0f : lightIntensity;
-
+        // lights off -> intensity = 0, sun -> intensity = 1
+        float effectiveIntensity;
+        if (lightMode == -1) {
+            effectiveIntensity = 0.0f;
+        } else if (lightMode == 0) {
+            effectiveIntensity = 1.0f;
+        } else {
+            effectiveIntensity = lightIntensity;
+        }
+    
         shader.bind();
 
         // Per-frame uniforms
