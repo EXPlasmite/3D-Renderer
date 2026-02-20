@@ -105,6 +105,11 @@ The project demonstrates the 3D rendering pipeline using **VBO / VAO / EBO**, **
 
 - The build will show BUILD SUCCESS after the program exits normally.
 
+### IDE Note
+
+If you open the project fresh, you may briefly see unresolved imports that appear as errors.
+Navigating to each file will resolve them, however, the program runs normally without doing so. 
+
 ## Known Warnings (JDK 24)
 
 - When running on newer Java versions (e.g., JDK 24), you may see warnings like:
