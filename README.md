@@ -38,25 +38,25 @@ The project demonstrates the 3D rendering pipeline using **VBO / VAO / EBO**, **
 ## Controls
 
 ### Lighting (press key again to toggle on/off)
-- **1** — Sunlight (Directional)
-- **2** — Point Light (Moving)
-- **3** — Rainbow Point Light (Moving)
-- **Mouse Wheel** — Change intensity (Point / Rainbow only)
+- **1** - Sunlight (Directional)
+- **2** - Point Light (Moving)
+- **3** - Rainbow Point Light (Moving)
+- **Mouse Wheel** - Change intensity (Point / Rainbow only)
 
 ### Camera
-- **W / A / S / D** — Forward / Left / Back / Right
-- **Mouse** — Look (yaw / pitch)
-- **SPACE** — Up
-- **LEFT SHIFT** — Down
-- **LEFT CTRL** — Sprint
-- **R** — Reset camera
-- **ESC** — Quit
+- **W / A / S / D** - Forward / Left / Back / Right
+- **Mouse** - Look (yaw / pitch)
+- **SPACE** - Up
+- **LEFT SHIFT** - Down
+- **LEFT CTRL** - Sprint
+- **R** - Reset camera
+- **ESC** - Quit
 
 ## Folder Structure (inside `/src/main/`)
 
 - `/java/` – Java source code (all engine / app logic):
     - `/com/tybingham/graphics/app/` – application + windowing + timing + input
-        - `App.java` – main game / app loop (update -> render)
+        - `App.java` – main program / app loop (update -> render)
         - `Input.java` – keyboard + mouse + scroll handling (FPS controls + toggles)
         - `Time.java` – delta-time tracking for smooth movement / animation
         - `Window.java` – GLFW window creation, OpenGL context setup, swap / clear, input hookup
@@ -98,12 +98,12 @@ The project demonstrates the 3D rendering pipeline using **VBO / VAO / EBO**, **
 2. Install **Maven** and ensure `mvn -version` works in your terminal.
 3. Download / clone this repository to your machine.
 4. Open a terminal in the **root folder** of the project (where `pom.xml` is).
-5. Run the game:
+5. Run the program:
 
    ```bash
    mvn clean compile exec:java
 
-- The build will show BUILD SUCCESS after the game exits normally.
+- The build will show BUILD SUCCESS after the program exits normally.
 
 ## Known Warnings (JDK 24)
 
